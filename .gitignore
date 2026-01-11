@@ -1,0 +1,44 @@
+# Build output
+bin/
+obj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider
+.idea/
+
+# ReSharper
+_ReSharper*/
+*.DotSettings.user
+
+# ASP.NET Core
+*.log
+*.pdb
+*.cache
+
+# SQL Server local db files (just in case)
+*.mdf
+*.ldf
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# NuGet
+*.nupkg
+packages/
+
+# Node (if frontend)
+node_modules/
+
+# Environment & secrets
+.env
+appsettings.Development.json
+
+# Publish output
+publish/
