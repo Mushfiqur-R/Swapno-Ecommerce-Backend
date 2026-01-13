@@ -19,5 +19,10 @@ namespace DAL
         {
             return new RoleRepo(_db);   
         }
+
+        public ICrud<Category> CategoryData()
+        {
+            return new CategoryRepo(_db);
+        }
     }
 }
