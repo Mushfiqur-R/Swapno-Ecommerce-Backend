@@ -1,6 +1,7 @@
 ﻿using DAL.Data;
 using DAL.Interfaces;
 using DAL.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,24 +14,50 @@ namespace DAL.Repository
         public RoleRepo(SwapnoDbContext db)
         {
             _db = db;
+
         }
-        public Role Create(Role entity)
+        public async Task<Role> CreateAsync(Role entity)
         {
             _db.Roles.Add(entity);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
             return entity;
-
         }
 
-        public List<Role> GetAll()
+        public async Task<bool> DeleteAsync(int id)
         {
-            var roles= _db.Roles.ToList();
-            return roles;
+            var entity = await _db.Roles.FindAsync(id);
+
+            if (entity == null)
+            {
+                return false;
+            }
+
+            _db.Roles.Remove(entity);
+            await _db.SaveChangesAsync();
+            return true;
+
         }
 
-public Role Update(Role entity)
-{
-    throw new NotImplementedException();
-}
+        public async Task<List<Role>> GetAllAsync()
+        {
+            var roles= await _db.Roles.ToListAsync();
+            return roles;
+
+        }
+
+        public async Task<Role?> GetAsync(int id)
+        {
+            var exist= await _db.Roles.FindAsync(id);
+            return exist;
+        }
+
+        public async Task<Role> UpdateAsync(Role entity)
+        {
+            var update= _db.Roles.Update(entity);
+            await _db.SaveChangesAsync();
+            return entity;
+        }
+
+        
     }
 }

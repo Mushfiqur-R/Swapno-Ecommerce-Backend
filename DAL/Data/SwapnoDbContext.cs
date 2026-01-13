@@ -11,5 +11,6 @@ namespace DAL.Data
         public SwapnoDbContext(DbContextOptions<SwapnoDbContext>options):base(options) { }
 
         public DbSet<Role>Roles { get; set; }
+        public DbSet<Category>Categories { get; set; }
     }
 }

@@ -10,22 +10,30 @@ namespace Swapno.Controllers
     public class RoleController : ControllerBase
     {
         private readonly RoleService roleService;
-        public RoleController( RoleService service) { 
+        public RoleController(RoleService service)
+        {
             roleService = service;
         }
         [HttpPost("createrole")]
-        public IActionResult createRole(CreateRoleDto role)
+        public async Task<IActionResult> CreateRole(CreateRoleDto role)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var data = roleService.CreateRole(role);
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var data = await roleService.CreateRole(role);
                 return Ok(data);
             }
-            return BadRequest(ModelState);
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
 
         }
         [HttpGet("getallroles")]
-        public IActionResult getallroles()
+        public async Task<IActionResult> Getallroles()
         {
             if (!ModelState.IsValid)
             {
@@ -33,10 +41,55 @@ namespace Swapno.Controllers
             }
             else
             {
-                var roles = roleService.GetAllRoles();
+                var roles = await roleService.GetAllRoles();
                 return Ok(roles);
             }
         }
+        [HttpGet("getrole/{id}")]
+        public async Task<IActionResult> GetRole(int id)
+        {
+            try
+            {
+                var role = await roleService.GetRolebyID(id);
+                return Ok(role);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+
+        }
+        [HttpPatch("updaterole/{id}")]
+        public async Task<IActionResult> UpdateRole(int id,UpdateRoleDto dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var updatedRole = await roleService.UpdateRole(id, dto);
+                return Ok(updatedRole);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+        }
+
+
+        [HttpDelete("deleterole/{id}")]
+        public async Task<IActionResult> DeleteRole(int id)
+        {
+            var result = await roleService.DeleteRole(id);
+
+            if (!result)
+                return NotFound(new { message = "Role not found" });
+
+            return Ok(new { message = "Role deleted successfully" });
+        }
+
 
     }
 }

@@ -12,6 +12,9 @@ namespace BLL
         public MapperConfig() {
             CreateMap<CreateRoleDto, Role>().ReverseMap();
             CreateMap<RoleDto, Role>().ReverseMap();
+            CreateMap<UpdateRoleDto, Role>().ReverseMap();
+
+
         }
     }
 }
