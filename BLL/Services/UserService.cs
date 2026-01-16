@@ -21,9 +21,14 @@ namespace BLL.Services
 
         public async Task<UserDto> CreateUserAsync(CreateUserDto dto)
         {
-            var users = await factory.UserData().GetAllAsync();
+            //var users = await factory.UserData().GetAllAsync();
 
-            if (users.Any(u => u.Email == dto.Email))
+            //if (users.Any(u => u.Email == dto.Email))
+            //    throw new Exception("Email already exists");
+
+            var existingUser = await factory.UserData().GetByEmailAsync(dto.Email);
+
+            if (existingUser != null)
                 throw new Exception("Email already exists");
 
             var user = mapper.Map<User>(dto);

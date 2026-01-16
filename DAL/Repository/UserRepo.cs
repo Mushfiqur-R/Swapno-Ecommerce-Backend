@@ -8,7 +8,7 @@ using System.Text;
 
 namespace DAL.Repository
 {
-    internal class UserRepo : ICrud<User>
+    internal class UserRepo :IUserRepo
     {
         private readonly SwapnoDbContext db;
 
@@ -54,6 +54,11 @@ namespace DAL.Repository
             db.Users.Update(entity);
             await db.SaveChangesAsync();
             return entity;
+        }
+
+        public async Task<User?> GetByEmailAsync(string email)
+        {
+            return await db.Users.FirstOrDefaultAsync(u => u.Email == email);
         }
     }
 }

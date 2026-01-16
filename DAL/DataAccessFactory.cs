@@ -25,7 +25,7 @@ namespace DAL
             return new CategoryRepo(_db);
         }
 
-        public ICrud<User> UserData() 
+        public IUserRepo UserData() 
         { return new UserRepo(_db); }
     }
 }
