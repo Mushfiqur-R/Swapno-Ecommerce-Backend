@@ -17,6 +17,8 @@ builder.Services.AddScoped<DataAccessFactory>();
 builder.Services.AddScoped<RoleService>();
 builder.Services.AddScoped<CategoryService>();
 
+builder.Services.AddScoped<UserService>();
+
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
