@@ -27,5 +27,10 @@ namespace DAL
 
         public IUserRepo UserData() 
         { return new UserRepo(_db); }
+
+        public IProductRepo ProductData()
+        {
+            return new ProductRepo(_db);
+        }
     }
 }

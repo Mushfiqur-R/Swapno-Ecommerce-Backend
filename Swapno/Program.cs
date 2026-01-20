@@ -16,7 +16,8 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<DataAccessFactory>();
 builder.Services.AddScoped<RoleService>();
 builder.Services.AddScoped<CategoryService>();
-
+builder.Services.AddScoped<ProductService>();
+builder.Services.AddScoped<EmailService>();
 builder.Services.AddScoped<UserService>();
 
 

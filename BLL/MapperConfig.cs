@@ -21,6 +21,13 @@ namespace BLL
             CreateMap<User, UserDto>()
            .ForMember(dest => dest.Role,
                opt => opt.MapFrom(src => src.Role.Name));
+
+            CreateMap<Product, ProductDto>()
+    .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name))
+    .ForMember(dest => dest.VendorName, opt => opt.MapFrom(src => src.Vendor.Name)) 
+    .ForMember(dest => dest.VendorEmail, opt => opt.MapFrom(src => src.Vendor.Email));
+            CreateMap<ProductDto, Product>();
         }
+        
     }
 }
