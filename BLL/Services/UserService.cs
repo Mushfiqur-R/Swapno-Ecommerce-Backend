@@ -33,7 +33,7 @@ namespace BLL.Services
 
             var user = mapper.Map<User>(dto);
 
-            // 🔐 password hash
+           
             user.Password = BCrypt.Net.BCrypt.HashPassword(dto.Password);
 
             var created = await factory.UserData().CreateAsync(user);
@@ -66,31 +66,34 @@ namespace BLL.Services
 
         public async Task<UserDto> UpdateUserAsync(int id, UpdateUserDto dto)
         {
-     
             var user = await factory.UserData().GetAsync(id);
             if (user == null)
                 throw new Exception("User not found");
-
-       
-
-            if (!string.IsNullOrEmpty(dto.Name))
+            if (!string.IsNullOrEmpty(dto.Name)) user.Name = dto.Name;
+            if (!string.IsNullOrEmpty(dto.PhoneNumber)) user.PhoneNumber = dto.PhoneNumber;
+            if (dto.RoleId != null) user.RoleId = dto.RoleId.Value;
+      
+            if (!string.IsNullOrEmpty(dto.Password))
             {
-                user.Name = dto.Name;
+                user.Password = BCrypt.Net.BCrypt.HashPassword(dto.Password);
             }
 
-            if (!string.IsNullOrEmpty(dto.PhoneNumber))
+           
+            if (!string.IsNullOrEmpty(dto.Email))
             {
-                user.PhoneNumber = dto.PhoneNumber;
+                
+                if (user.Email != dto.Email)
+                {
+                    var existingUser = await factory.UserData().GetByEmailAsync(dto.Email);
+                    if (existingUser != null)
+                    {
+                        throw new Exception("This Email is already taken by another user!");
+                    }
+                    user.Email = dto.Email;
+                }
             }
-
-            if (dto.RoleId != null)
-            {
-                user.RoleId = dto.RoleId.Value;
-            }
-
 
             await factory.UserData().UpdateAsync(user);
-
             return mapper.Map<UserDto>(user);
         }
 

@@ -10,46 +10,46 @@ namespace BLL.Services
 {
     public class ProductService
     {
-        // 1. Factory ডিক্লেয়ার
+        
         private readonly DataAccessFactory _factory;
         private readonly IMapper _mapper;
         private readonly EmailService _emailService;
 
-        // কনস্ট্রাক্টর
-        public ProductService(DataAccessFactory factory, IMapper mapper)
+        
+        public ProductService(DataAccessFactory factory, IMapper mapper, EmailService emailService)
         {
-            _factory = factory; // 2. Factory ইনিশিয়ালাইজ
+            _factory = factory; 
             _mapper = mapper;
-            _emailService = new EmailService();
+            _emailService =  emailService;
         }
 
-        // ✅ Create Product
+        
         public async Task<ProductDto> CreateProductAsync(ProductDto dto)
         {
             var product = _mapper.Map<Product>(dto);
             product.Status = ProductStatus.Active;
 
-            // 🔥 পরিবর্তন: _repo এর বদলে _factory.ProductData()
+            
             var created = await _factory.ProductData().CreateAsync(product);
 
             return _mapper.Map<ProductDto>(created);
         }
 
-        // ✅ Update Product
+        
         public async Task<ProductDto> UpdateProductAsync(int id, ProductDto dto)
         {
-            // 🔥 পরিবর্তন: _factory.ProductData() ব্যবহার করা হয়েছে
+           
             var dbProduct = await _factory.ProductData().GetAsync(id);
 
             if (dbProduct == null) return null;
 
-            // ডেটা আপডেট
+           
             dbProduct.Name = dto.Name;
             dbProduct.Price = dto.Price;
             dbProduct.Quantity = dto.Quantity;
             dbProduct.ExpiryDate = dto.ExpiryDate;
 
-            // Workflow Logic
+           
             if (dbProduct.Quantity <= 0)
             {
                 dbProduct.Status = ProductStatus.OutOfStock;
@@ -59,20 +59,18 @@ namespace BLL.Services
                 dbProduct.Status = ProductStatus.Active;
             }
 
-            // Email Notification Logic
+            
             if (dbProduct.Quantity < 10 && dbProduct.Quantity > 0)
             {
                 if (dbProduct.Vendor != null)
                 {
                     var email = dbProduct.Vendor.Email;
                     var subject = $"Low Stock Warning: {dbProduct.Name}";
-                    var body = $"Alert! Only {dbProduct.Quantity} items left.";
+                    var body = $"Alert! Only {dbProduct.Quantity} items left.please prepare your to delivery!";
 
                     _emailService.SendLowStockAlert(email, subject, body);
                 }
             }
-
-           
             var updated = await _factory.ProductData().UpdateAsync(dbProduct);
 
             return _mapper.Map<ProductDto>(updated);
@@ -94,10 +92,10 @@ namespace BLL.Services
 
         public async Task<List<ProductDto>> GetExpiryReportAsync()
         {
-            // Factory দিয়ে Repo এর স্পেশাল মেথড কল করা হচ্ছে
+         
             var data = await _factory.ProductData().GetExpiringProductsAsync();
 
-            // DTO তে কনভার্ট করে রিটার্ন
+            
             return _mapper.Map<List<ProductDto>>(data);
         }
     }

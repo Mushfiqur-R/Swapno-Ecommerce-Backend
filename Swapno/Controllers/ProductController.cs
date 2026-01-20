@@ -52,9 +52,9 @@ namespace Swapno.Controllers
             }
         }
 
-        // সার্চ API: api/product/search?name=apple&min=10&max=500
+        
         [HttpGet("search")]
-        public async Task<IActionResult> Search([FromQuery] string? name, [FromQuery] double? min, [FromQuery] double? max)
+        public async Task<IActionResult> Search(string? name,  double? min, double? max)
         {
             var data = await _service.SearchAsync(name, min, max);
             return Ok(data);

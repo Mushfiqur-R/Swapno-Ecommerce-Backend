@@ -88,16 +88,17 @@ namespace DAL.Repository
             return await query.ToListAsync();
         }
 
-        // ৭. মেয়াদ শেষের রিপোর্ট (আগামী ৭ দিন)
+       
         public async Task<List<Product>> GetExpiringProductsAsync()
         {
-            var today = DateTime.Now;
+            var today = DateTime.Today;
             var nextWeek = today.AddDays(7);
-
             return await db.Products
                 .Include(p => p.Vendor)
                 .Where(p => p.ExpiryDate >= today && p.ExpiryDate <= nextWeek)
+                .OrderBy(p => p.ExpiryDate)
                 .ToListAsync();
+                
         }
     }
 }

@@ -15,5 +15,6 @@
         public string? CategoryName { get; set; }
         public string? VendorName { get; set; }
         public string? VendorEmail { get; set; }
+        public string? RemainingTime { get; set; }
     }
 }
